@@ -7,8 +7,8 @@ namespace AdWindows.POC.Controllers
 	[Route("[controller]")]
 	public class UsersController : ControllerBase
 	{
-		[HttpGet("checkIfExists/{user}")]
-		public string CheckIfExists(string? user)
+		[HttpGet("{user}/{password}")]
+		public string CheckIfExists(string? user, string? password)
 		{
 			if (!OperatingSystem.IsWindows())
 				throw new Exception("Este método funciona apenas com esta API hospedada no ambiente Windows.");
@@ -16,11 +16,10 @@ namespace AdWindows.POC.Controllers
 			try
 			{
 				using PrincipalContext context = new(ContextType.Domain);
-				using PrincipalSearcher searcher = new(new UserPrincipal(context));
 
-				bool exists = searcher.FindAll().Any(u => OperatingSystem.IsWindows() && u.SamAccountName == user);
+				bool isValid = context.ValidateCredentials(user, password);
 
-				return exists ? "Existe!" : "Não existe!";
+				return isValid ? "Credenciais válidas!" : "Credenciais inválidas!";
 			}
 			catch (Exception ex)
 			{
