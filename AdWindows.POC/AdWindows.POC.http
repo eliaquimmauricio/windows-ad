@@ -1,0 +1,6 @@
+@Tasken.POC_HostAddress = http://localhost:5027
+
+GET {{Tasken.POC_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
